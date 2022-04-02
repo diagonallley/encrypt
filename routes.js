@@ -20,31 +20,21 @@ const Securitykey = crypto.randomBytes(32);
 //cipher function
 const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
 
-//encrypt the note, input encoding, output encoding
-
-let encryptedData = cipher.update(note, "utf-8", "hex");
-
-encryptedData += cipher.final("hex");
-
-console.log(`Encrypted message: ${encryptedData}`);
-
-//**********************************Decryption*********************** */
-
-const decipher = crypto.createDecipheriv(algorithm, Securitykey, initVector);
-
-let decryptedData = decipher.update(encryptedData, "hex", "utf-8");
-
-decryptedData += decipher.final("utf-8");
-
-console.log(`Decrypted message: ${decryptedData}`);
-//*********************************************** */
-
 app.post("/addnote", async (req, res) => {
-  const Note = new notesModel(req.body);
+  console.log(req.body.content);
+  let note = req.body.content;
+  let encryptedData = cipher.update(note, "utf-8", "hex");
+
+  encryptedData += cipher.final("hex");
+
+  console.log(encryptedData);
+
+  const Note = new notesModel({ content: encryptedData });
 
   try {
     await Note.save();
     res.send(Note);
+    // console.log(Securitykey);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -52,9 +42,12 @@ app.post("/addnote", async (req, res) => {
 
 app.get("/notes", async (request, response) => {
   const notes = await notesModel.find({});
+  const enc = notes[0].content;
+  console.log(enc);
 
   try {
     response.send(notes);
+    // console.log(Securitykey);
   } catch (error) {
     response.status(500).send(error);
   }
