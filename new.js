@@ -27,7 +27,7 @@ let encryptedData = cipher.update(note, "utf-8", "hex");
 
 encryptedData += cipher.final("hex");
 
-console.log(`Encrypted message: ${encryptedData}`);
+// console.log(`Encrypted message: ${encryptedData}`);
 
 //**********************************Decryption*********************** */
 
@@ -37,7 +37,7 @@ let decryptedData = decipher.update(encryptedData, "hex", "utf-8");
 
 decryptedData += decipher.final("utf-8");
 
-console.log(`Decrypted message: ${decryptedData}`);
+// console.log(`Decrypted message: ${decryptedData}`);
 
 mongoose.connect("mongodb://localhost:27017/testdb", {
   useNewUrlParser: true,
